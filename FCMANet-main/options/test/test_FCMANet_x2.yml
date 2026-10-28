@@ -1,0 +1,79 @@
+name: FCMANet_x2
+model_type: SRModel
+scale: 2
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+datasets:
+  test_1:  # the 1st test dataset
+    name: resultsA
+    type: PairedImageDataset
+    dataroot_gt: datasets/test/resultsA/HR
+    dataroot_lq: datasets/test/resultsA/LR/X2
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+  test_2:  # the 2nd test dataset
+    name: resultsC
+    type: PairedImageDataset
+    dataroot_gt: datasets/test/resultsC/HR
+    dataroot_lq: datasets/test/resultsC/LR/X2
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+  test_3:  # the 3st test dataset
+    name: M3FD
+    type: PairedImageDataset
+    dataroot_gt: datasets/test/M3FD/CVC09_HR
+    dataroot_lq: datasets/test/M3FD/CVC09_HR/X2
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+  test_4:  # the 4nd test dataset
+    name: FLIR
+    type: PairedImageDataset
+    dataroot_gt: datasets/test/FLIR/HR
+    dataroot_lq: datasets/test/FLIR/LR/X2
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+  test_5:  # the 5st test dataset
+    name: IR700
+    type: PairedImageDataset
+    dataroot_gt: datasets/test/IR700/HR
+    dataroot_lq: datasets/test/IR700/LR/X2
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+
+
+# network structures
+network_g:
+  type: FCMANet
+  dim: 36
+  n_blocks: 8
+  upscaling_factor: 2
+
+# path
+path:
+  pretrain_network_g: experiments/pretrained_models/FCMANet_x2.pth
+  strict_load_g: true
+
+# validation settings
+val:
+  save_img: true
+  suffix: ~  # add suffix to saved images, if None, use exp name
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 2
+      test_y_channel: false
+    ssim:
+      type: calculate_ssim
+      crop_border: 2
+      test_y_channel: false
